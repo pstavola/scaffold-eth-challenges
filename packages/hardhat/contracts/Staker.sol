@@ -21,7 +21,7 @@ contract Staker {
 
   // Collect funds in a payable `stake()` function and track individual `balances` with a mapping:
   function stake() public payable{
-    require(msg.value > 0, "value cannot be 0");
+    require(timeLeft() > 0, "you can't stake after deadline");
 
     balances[msg.sender] += msg.value;
     emit Stake(msg.sender, msg.value);
@@ -30,8 +30,9 @@ contract Staker {
 
   // After some `deadline` allow anyone to call an `execute()` function
   // If the deadline has passed and the threshold is met, it should call `exampleExternalContract.complete{value: address(this).balance}()`
-  function execute() public{
-    require(block.timestamp>=deadline, "deadline not reached yet");
+  function execute() public notCompleted {
+    require(timeLeft() == 0, "deadline not reached yet");
+    require(openForWithdraw == false, "Crowdfund has not completed successfully, you can withdraw your funds.");
 
     if(address(this).balance>=threshold){
       exampleExternalContract.complete{value: address(this).balance}();
@@ -43,10 +44,12 @@ contract Staker {
 
 
   // If the `threshold` was not met, allow everyone to call a `withdraw()` function
-  function withdraw() public{
+  function withdraw() public notCompleted {
     require(openForWithdraw==true, "withdraw not allowed");
 
     uint256 balanceToSend = balances[msg.sender];
+    require(balanceToSend > 0, "nothing to withdraw");
+
     balances[msg.sender] = 0;
     payable(msg.sender).transfer(balanceToSend);
   }
@@ -63,5 +66,10 @@ contract Staker {
   // Add the `receive()` special function that receives eth and calls stake()
   receive() external payable{
     stake();
+  }
+
+  modifier notCompleted{
+    require(exampleExternalContract.completed() == false, "Crowdfund has already been completed!");
+    _;
   }
 }
