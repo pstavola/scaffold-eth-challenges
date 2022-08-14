@@ -76,7 +76,11 @@ contract DEX {
         uint256 xInput,
         uint256 xReserves,
         uint256 yReserves
-    ) public view returns (uint256 yOutput) {}
+    ) public view returns (uint256 yOutput) {
+        // price formula: dy = y * 0.997 * dx / (x + 0.997 * dx)
+        // in Solidity after simplifying : dy = (y * 997 * dx) / (x * 1000 + 997 * dx)
+        yOutput = (yReserves * 997 * xInput) / (xReserves * 1000 + 997 * xInput);
+    }
 
     /**
      * @notice returns liquidity for a user. Note this is not needed typically due to the `liquidity()` mapping variable being public and having a getter as a result. This is left though as it is used within the front end code (App.jsx).
