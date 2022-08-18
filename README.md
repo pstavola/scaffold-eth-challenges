@@ -1,4 +1,4 @@
-# Challenge 1 of [SpeedRunEthereum.com](https://speedrunethereum.com/challenge/token-vendor)
+# Challenge 2 of [SpeedRunEthereum.com](https://speedrunethereum.com/challenge/token-vendor)
 
 ## Token vendor
 
