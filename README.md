@@ -2,7 +2,7 @@
 
 ## Minimum Viable Exchange
 
-A simple decentralized exchange, with one token-pair (ERC20 BALLOONS ($BAL) and ETH).  
+A simple decentralized exchange, with one token-pair: BALLOONS ($BAL) and ETH.  
   
   
 Deployed to Görli Testnet  
