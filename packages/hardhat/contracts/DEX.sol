@@ -36,7 +36,7 @@ contract DEX {
     /**
      * @notice Emitted when liquidity provided to DEX and mints LPTs.
      */
-    event LiquidityProvided();
+    event LiquidityProvided(address sender, uint256 liquidityMinted, uint256 ethIN, uint256 balIN);
 
     /**
      * @notice Emitted when liquidity removed from DEX and decreases LPT count within DEX.
@@ -132,7 +132,22 @@ contract DEX {
      * NOTE: user has to make sure to give DEX approval to spend their tokens on their behalf by calling approve function prior to this function call.
      * NOTE: Equal parts of both assets will be removed from the user's wallet with respect to the price outlined by the AMM.
      */
-    function deposit() public payable returns (uint256 tokensDeposited) {}
+    function deposit() public payable returns (uint256 tokensDeposited) {
+        require(msg.value > 0, "you cannot deposit 0 ETH");
+
+        uint256 balBalance = token.balanceOf(address(this));
+        uint256 ethBalance = address(this).balance;
+        tokensDeposited = msg.value * balBalance / ethBalance;
+
+        bool balSuccess = token.transferFrom(msg.sender, address(this), tokensDeposited);
+        require(balSuccess, "BAL transfer failed");
+
+        uint256 liquidityMinted = msg.value * totalLiquidity / ethBalance;
+        liquidity[msg.sender] += liquidityMinted;
+        totalLiquidity += liquidityMinted;
+
+        emit LiquidityProvided(msg.sender, liquidityMinted, msg.value, tokensDeposited);
+    }
 
     /**
      * @notice allows withdrawal of $BAL and $ETH from liquidity pool
