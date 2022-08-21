@@ -4,8 +4,6 @@
 
 A simple decentralized exchange, with one token-pair (ERC20 BALLOONS ($BAL) and ETH).  
   
-Up to Checkpoint 3.
-  
   
 Deployed to Görli Testnet  
 [Baloons Contract](https://goerli.etherscan.io/address/0x9fdfa081B9eD73870e4432204F1A3C83480B02fC#code)  
