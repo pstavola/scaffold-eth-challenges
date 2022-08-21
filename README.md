@@ -8,6 +8,6 @@ Up to Checkpoint 3.
   
   
 Deployed to Görli Testnet  
-[Baloons Contract](https://goerli.etherscan.io/address/0x62b431165c07ff4ff14263e72b0bdf4651be64d2)  
-[DEX Contract](https://goerli.etherscan.io/address/0xAd800d3a6C96360c8E31547AB56647c4d3065536)  
-[Frontend](https://brown-gun.surge.sh/)
+[Baloons Contract](https://goerli.etherscan.io/address/0x9fdfa081B9eD73870e4432204F1A3C83480B02fC#code)  
+[DEX Contract](https://goerli.etherscan.io/address/0x8F7722E5C009818fe238006a8f7faee1D9B2a9F0#code)  
+[Frontend](https://friendly-boat.surge.sh)
