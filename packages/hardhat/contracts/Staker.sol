@@ -17,7 +17,7 @@ contract Staker {
   ExampleExternalContract public exampleExternalContract; // external contract to collect funding
   mapping ( address => uint256 ) public balances; // tracks individual donations
   uint256 public constant THRESHOLD = 1 ether; // threshold to consider the crowdfunding effort successfull
-  uint256 public deadline = block.timestamp + 48 hours; // crowdfunding period final deadline
+  uint256 public deadline = block.timestamp + 72 hours; // crowdfunding period final deadline
   bool public openForWithdraw = false; // allow withdrawals
 
   /* ========== MODIFIERS ========== */
