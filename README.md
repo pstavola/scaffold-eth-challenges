@@ -1,7 +1,9 @@
-# Challenge 0 of [SpeedRunEthereum.com](https://speedrunethereum.com)
+# [Challenge 0](https://github.com/scaffold-eth/scaffold-eth-challenges/tree/challenge-0-simple-nft) of [SpeedRunEthereum.com](https://speedrunethereum.com)  
 
-## Simple NFT
+## Simple NFT  
 
-Create a simple NFT and a React app that lets users purchase and transfer NFTs.
+Challenge consists in deploying a simple NFT ERC-721 contract by using HardHat to compile, deploy and verify smart contracts on Etherscan.  
+The final deliverable is webapp made with React and uploaded to a public web server that lets users purchase and transfer NFTs.  
+  
 
-Live app deployed to Görli and uploaded to [Surge](https://concerned-bucket.surge.sh/)
+Live app deployed to Görli and uploaded to [Surge](https://concerned-bucket.surge.sh/)  
