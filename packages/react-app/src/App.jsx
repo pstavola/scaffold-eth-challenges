@@ -60,7 +60,7 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -484,6 +484,9 @@ function App(props) {
   const buyTokensEvents = useEventListener(readContracts, "Vendor", "BuyTokens", localProvider, 1);
   console.log("📟 buyTokensEvents:", buyTokensEvents);
 
+  const sellTokensEvents = useEventListener(readContracts, "Vendor", "SellTokens", localProvider, 1);
+  console.log("📟 sellTokensEvents:", sellTokensEvents);
+
   const [tokenBuyAmount, setTokenBuyAmount] = useState({
     valid: false,
     value: "",
@@ -523,7 +526,7 @@ function App(props) {
   if (yourTokenBalance) {
     transferDisplay = (
       <div style={{ padding: 8, marginTop: 32, width: 420, margin: "auto" }}>
-        <Card title="Transfer tokens">
+        <Card title="Transfer Platinum">
           <div>
             <div style={{ padding: 8 }}>
               <AddressInput
@@ -575,7 +578,7 @@ function App(props) {
               }}
               to="/"
             >
-              YourToken
+              Platinum
             </Link>
           </Menu.Item>
           <Menu.Item key="/contracts">
@@ -593,7 +596,7 @@ function App(props) {
         <Switch>
           <Route exact path="/">
             <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
-              <Card title="Your Tokens" extra={<a href="#">code</a>}>
+              <Card title="Your tokens" extra={<a href="#">code</a>}>
                 <div style={{ padding: 8 }}>
                   <Balance balance={yourTokenBalance} fontSize={64} />
                 </div>
@@ -602,7 +605,7 @@ function App(props) {
             {transferDisplay}
             <Divider />
             <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
-              <Card title="Buy Tokens" extra={<a href="#">code</a>}>
+              <Card title="Buy Platinum" extra={<a href="#">code</a>}>
                 <div style={{ padding: 8 }}>{tokensPerEth && tokensPerEth.toNumber()} tokens per ETH</div>
                 <div style={{ padding: 8 }}>
                   <Input
@@ -637,11 +640,14 @@ function App(props) {
                 </div>
               </Card>
             </div>
-            {/*Extra UI for buying the tokens back from the user using "approve" and "sellTokens"
+          
+            
+            
+            {/*Extra UI for buying the tokens back from the user using "approve" and "sellTokens"*/}
 
             <Divider />
             <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
-              <Card title="Sell Tokens">
+              <Card title="Sell Platinum">
                 <div style={{ padding: 8 }}>{tokensPerEth && tokensPerEth.toNumber()} tokens per ETH</div>
 
                 <div style={{ padding: 8 }}>
@@ -714,7 +720,6 @@ function App(props) {
 
               </Card>
             </div>
-            */}
             <div style={{ padding: 8, marginTop: 32 }}>
               <div>Vendor Token Balance:</div>
               <Balance balance={vendorTokenBalance} fontSize={64} />
@@ -737,6 +742,23 @@ function App(props) {
                       ETH to get
                       <Balance balance={item.args[2]} />
                       Tokens
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+            <div style={{ width: 500, margin: "auto", marginTop: 64 }}>
+              <div>Sell Token Events:</div>
+              <List
+                dataSource={sellTokensEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item.blockNumber + item.blockHash}>
+                      <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /> sold
+                      <Balance balance={item.args[2]} />
+                      Tokens to get
+                      <Balance balance={item.args[1]} />
+                      ETH
                     </List.Item>
                   );
                 }}
