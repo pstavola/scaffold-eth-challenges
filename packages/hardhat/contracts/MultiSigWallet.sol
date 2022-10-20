@@ -13,6 +13,7 @@ contract MultiSigWallet {
   mapping (address => bool) public hasSigned;
   uint256 public signaturesRequired;
   uint256 public nonce = 0;
+  uint256 public ownerCounter = 0;
   string public purpose = "Building Unstoppable Apps!!!";
 
   event SetPurpose(address sender, string purpose);
@@ -29,13 +30,13 @@ contract MultiSigWallet {
 
   constructor(address[] memory _owners, uint256 _sigsRequired) payable {
     require(_owners.length > 0, "MetaMultiSigWallet must have at least 1 owner");
-    require(_sigsRequired <= _owners.length, "number of approvals must be less or equal to number of owners");
+    require(_sigsRequired <= _owners.length, "Number of signatures must be less or equal to number of owners");
 
     for(uint256 i; i < _owners.length; i++){
       require(_owners[i] != address(0), "owner cannot be address(0)");
       require(!isOwner[_owners[i]], "duplicated owner");
-
       isOwner[_owners[i]] = true;
+      ownerCounter++;
     }
     signaturesRequired = _sigsRequired;
   }
@@ -83,17 +84,20 @@ contract MultiSigWallet {
     require(_newSigner != address(0), "New signer cannot be address(0)");
     require(!isOwner[_newSigner], "Signer already exists");
     isOwner[_newSigner] = true;
+    ownerCounter++;
     updateSignaturesRequried(_sigsReq);
   }
 
   function removeSigner(address _oldSigner, uint256 _sigsReq) public onlyOwner {
     require(isOwner[_oldSigner], "Signer you want to remove is not an owner");
     isOwner[_oldSigner] = false;
+    ownerCounter--;
     updateSignaturesRequried(_sigsReq);
   }
 
   function updateSignaturesRequried(uint256 _sigsReq) public onlyOwner {
     require(_sigsReq > 0, "Signatures required cannot be 0.");
+    require(_sigsReq <= ownerCounter, "Number of signatures required cannot be more than number of owners.");
     signaturesRequired = _sigsReq;
   }
 
