@@ -11,13 +11,21 @@ contract MultiSigWallet {
 
   mapping (address => bool) public isOwner;
   mapping (address => bool) public hasSigned;
-  uint256 public approvalsRequired;
-
+  uint256 public sigsRequired;
   uint256 public nonce = 0;
-
-  // event SetPurpose(address sender, string purpose);
-
   string public purpose = "Building Unstoppable Apps!!!";
+
+  event SetPurpose(address sender, string purpose);
+
+  modifier onlyOwner() {
+    require(isOwner[msg.sender], "not an owner");
+    _;
+  }
+
+  modifier onlySelf() {
+    require(msg.sender == address(this), "only MultiSigWallet contract can invoke this function");
+    _;
+  }
 
   constructor(address[] memory _owners, uint256 _approvalsRequired) payable {
     require(_owners.length > 0, "MetaMultiSigWallet must have at least 1 owner");
@@ -29,15 +37,15 @@ contract MultiSigWallet {
 
       isOwner[_owners[i]] = true;
     }
-    approvalsRequired = _approvalsRequired;
+    sigsRequired = _approvalsRequired;
   }
 
-  function getHash( uint256 _nonce, address to, uint256 value ) public view returns (bytes32) {
+  function getHash(uint256 _nonce, address to, uint256 value) public view returns (bytes32) {
     return keccak256(abi.encodePacked(address(this),_nonce,to,value));
   }
 
-  function executeTransaction( address payable _to, uint256 _value, bytes[] memory _signatures) public {
-    require(_signatures.length >= approvalsRequired, "not enough approvals");
+  function executeTransaction(address payable _to, uint256 _value, bytes[] memory _signatures) public {
+    require(_signatures.length >= sigsRequired, "not enough approvals");
 
     bytes32 hash = getHash(nonce, _to, _value);
     address[] memory listOfSigners;
@@ -64,14 +72,20 @@ contract MultiSigWallet {
   }
 
   function setPurpose(string memory newPurpose) public {
-      purpose = newPurpose;
-      console.log(msg.sender,"set purpose to",purpose);
-      // emit SetPurpose(msg.sender, purpose);
+    purpose = newPurpose;
+    console.log(msg.sender,"set purpose to",purpose);
+    emit SetPurpose(msg.sender, purpose);
   }
 
-/*   function call() public {}
-  function addSigner() public {}
-  function removeSigner() public {}
-  function transferFunds() public {}
-  function updateSignaturesRequried() public {} */
+  function addSigner(address _newSigner) public onlyOwner {
+    isOwner[_newSigner] = true;
+  }
+
+  function removeSigner(address _oldSigner) public onlyOwner {
+    isOwner[_oldSigner] = false;
+  }
+
+  function updateSignaturesRequried(uint256 _sigsReq) public onlyOwner {
+    sigsRequired = _sigsReq;
+  }
 }
